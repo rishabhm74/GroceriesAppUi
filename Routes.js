@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   View, 
   Text, 
   StyleSheet, 
   StatusBar, 
   Dimensions,
-  Button
+  Button,
+  Animated
 } from 'react-native';
 
 
@@ -14,6 +15,61 @@ const SCREENWIDTH = Dimensions.get('window').width;
 
 const Routes = () => {
   const [ filterVisible, setFilterVisible ] = useState(false);
+  
+  const filterIn  = useRef(new Animated.Value(0)).current;
+  const transformFilterIn = {
+    transform: [{
+      translateX: filterIn
+    }]
+  };
+  const animateFilterIn = () => {
+    Animated.timing(filterIn, {
+      toValue: -SCREENWIDTH,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
+  const animateFilterOut = () => {
+    Animated.timing(filterIn, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
+
+  const listOut  = useRef(new Animated.Value(0)).current;
+  const transformListOut = {
+    transform: [{
+      translateX: listOut
+    }]
+  };
+  const animateListOut = () => {
+    Animated.timing(listOut, {
+      toValue: -SCREENWIDTH,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
+  const animateListIn = () => {
+    Animated.timing(listOut, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
+
+
+
+  const showList = () => {
+    animateFilterIn();
+    animateListOut();
+  }
+
+  const hideList = () => {
+    animateFilterOut();
+    animateListIn();
+  }
+
 
   return (
     <View style={styles.mainContainer}>
@@ -25,26 +81,34 @@ const Routes = () => {
 
       <View style={styles.pagesContainer}>
 
-        <View 
-          style={[styles.listContainer, { 
-            right: filterVisible ? SCREENWIDTH : null 
-           }]}
+        <Animated.View 
+          style={[styles.listContainer, 
+            // right: filterVisible ? SCREENWIDTH : null 
+            transformListOut
+           ]}
         >
           <View style={styles.cardsContainer}>
-
+            <Button 
+              title="click"
+              onPress={() => showList()}
+            />
           </View>
           <View style={styles.cartContainer}>
             <View style={styles.cartNumberContainer} />
           </View>
-        </View>
+        </Animated.View>
 
-        <View 
-          style={[styles.filterContainer, {
-            right: filterVisible ? SCREENWIDTH : null ,
-          }]}
+        <Animated.View 
+          style={[styles.filterContainer, 
+            // right: filterVisible ? SCREENWIDTH : null ,
+            transformFilterIn
+          ]}
         >
-
-        </View>
+          <Button 
+            title="click"
+            onPress={() => hideList()}
+          />
+        </Animated.View>
 
       </View>
 
@@ -67,8 +131,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   listContainer: {
-    backgroundColor: '#fff7dc',
+    // backgroundColor: '#fff7dc',
+    backgroundColor: 'red',
     width: SCREENWIDTH,
+    // width: SCREENWIDTH * 0.9,
     height: SCREENHEIGHT + StatusBar.currentHeight,
     position: 'relative',
     flexDirection: 'column'
@@ -76,12 +142,15 @@ const styles = StyleSheet.create({
     // paddingTop: StatusBar.currentHeight
   },
   filterContainer: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
+    backgroundColor: 'red',
     width: SCREENWIDTH,
     height: SCREENHEIGHT + StatusBar.currentHeight,
     position: 'relative',
     // right: ( filterVisible ? SCREENWIDTH : null )
-    paddingTop: StatusBar.currentHeight
+    paddingTop: StatusBar.currentHeight,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   cardsContainer: {
     width: SCREENWIDTH,
@@ -90,7 +159,9 @@ const styles = StyleSheet.create({
     // backgroundColor: '#ff00005b',
     borderBottomRightRadius: 38,
     borderBottomLeftRadius: 38,
-    zIndex: 1
+    zIndex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   cartContainer: {
     width: SCREENWIDTH,
