@@ -6,7 +6,8 @@ import {
   StatusBar, 
   Dimensions,
   Button,
-  Animated
+  Animated,
+  TouchableOpacity
 } from 'react-native';
 
 
@@ -14,7 +15,6 @@ const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
 
 const Routes = () => {
-  const [ filterVisible, setFilterVisible ] = useState(false);
   
   const filterIn  = useRef(new Animated.Value(0)).current;
   const transformFilterIn = {
@@ -58,16 +58,67 @@ const Routes = () => {
     }).start()
   };
 
+  const cardUp  = useRef(new Animated.Value(0)).current;
+  const transformCardUp = {
+    transform: [{
+      translateY: cardUp
+    }]
+  };
+  const animateCardUp = () => {
+    Animated.timing(cardUp, {
+      toValue: -(SCREENHEIGHT * 0.65),
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
+  const animateCardDown = () => {
+    Animated.timing(cardUp, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
+
+  const cartListUp  = useRef(new Animated.Value(0)).current;
+  const transformCartListUp = {
+    transform: [{
+      translateY: cartListUp
+    }]
+  };
+  const animateCartListUp = () => {
+    Animated.timing(cartListUp, {
+      toValue: -(SCREENHEIGHT * 0.65),
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
+  const animateCartListDown = () => {
+    Animated.timing(cartListUp, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true
+    }).start()
+  };
 
 
   const showList = () => {
     animateFilterIn();
     animateListOut();
-  }
+  };
 
   const hideList = () => {
     animateFilterOut();
     animateListIn();
+  };
+
+  const showCart = () => {
+    animateCardUp();
+    animateCartListUp();
+  };
+
+  const hideCart = () => {
+    animateCardDown();
+    animateCartListDown();
   }
 
 
@@ -81,26 +132,51 @@ const Routes = () => {
 
       <View style={styles.pagesContainer}>
 
+        {/* listContainer starts */}
         <Animated.View 
           style={[styles.listContainer, 
-            // right: filterVisible ? SCREENWIDTH : null 
             transformListOut
            ]}
         >
-          <View style={styles.cardsContainer}>
+          {/* cardsContainer starts */}
+          <Animated.View 
+            style={[styles.cardsContainer,
+              transformCardUp
+            ]}
+          >
             <Button 
               title="click"
               onPress={() => showList()}
             />
-          </View>
-          <View style={styles.cartContainer}>
-            <View style={styles.cartNumberContainer} />
-          </View>
-        </Animated.View>
+            <Button 
+              title="up"
+              onPress={() => showCart()}
+            />
+          </Animated.View>
+          {/* cardsContainer ends */}
 
+          {/* cartContainer starts */}
+          <Animated.View 
+            style={[styles.cartContainer,
+              transformCartListUp
+          ]}
+          > 
+            <View style={styles.cartContainerTitleView}>
+              <TouchableOpacity
+                onPress={() => hideCart()}
+              >
+                <View style={styles.cartCountView} />
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+          {/* cartContainer ends */}
+
+        </Animated.View>
+        {/* listContainer ends */}
+
+        {/* filterContainer starts */}
         <Animated.View 
           style={[styles.filterContainer, 
-            // right: filterVisible ? SCREENWIDTH : null ,
             transformFilterIn
           ]}
         >
@@ -109,6 +185,7 @@ const Routes = () => {
             onPress={() => hideList()}
           />
         </Animated.View>
+        {/* filterContainer ends */}
 
       </View>
 
@@ -131,23 +208,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   listContainer: {
-    // backgroundColor: '#fff7dc',
-    backgroundColor: 'red',
+    backgroundColor: '#000',
     width: SCREENWIDTH,
-    // width: SCREENWIDTH * 0.9,
     height: SCREENHEIGHT + StatusBar.currentHeight,
     position: 'relative',
-    flexDirection: 'column'
-    // right: ( filterVisible ? SCREENWIDTH : null ),
-    // paddingTop: StatusBar.currentHeight
+    flexDirection: 'column',
   },
   filterContainer: {
-    // backgroundColor: '#fff',
-    backgroundColor: 'red',
+    backgroundColor: '#000',
     width: SCREENWIDTH,
     height: SCREENHEIGHT + StatusBar.currentHeight,
     position: 'relative',
-    // right: ( filterVisible ? SCREENWIDTH : null )
     paddingTop: StatusBar.currentHeight,
     justifyContent: 'center',
     alignItems: 'center'
@@ -156,33 +227,33 @@ const styles = StyleSheet.create({
     width: SCREENWIDTH,
     height: (SCREENHEIGHT * 0.93),
     backgroundColor: '#fff7dc',
-    // backgroundColor: '#ff00005b',
     borderBottomRightRadius: 38,
     borderBottomLeftRadius: 38,
-    zIndex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   cartContainer: {
     width: SCREENWIDTH,
-    height:  SCREENHEIGHT * 0.2,
-    // backgroundColor: '#130e0e49',
     backgroundColor: 'black',
-    position: 'relative',
-    top: -((SCREENHEIGHT *  0.2)/3.1),
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
-    paddingLeft: 18,
-    paddingRight: 18,
-    paddingBottom: 18
+    height: (SCREENHEIGHT * 0.7) + StatusBar.currentHeight,
   },
-  cartNumberContainer: {
-    height: 60,
-    width: 60,
+  cartContainerTitleView: {
+    width: SCREENWIDTH,
+    height: (SCREENHEIGHT * 0.07) + StatusBar.currentHeight,
+    backgroundColor: '#000',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 18,
+    paddingLeft: 18
+  },
+  cartCountView: {
+    height: SCREENHEIGHT * 0.08,
+    width: SCREENHEIGHT * 0.08,
     backgroundColor: '#fdbc3f',
-    borderRadius: 70,
-    
+    borderRadius: SCREENHEIGHT
   }
+  
+
 })
 
 export default Routes;
