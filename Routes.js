@@ -182,7 +182,7 @@ const Routes = () => {
                   onPress={() => showList()}
                 >
                   <Image 
-                    source={require('./assets/icons/filterSlider1.png')}
+                    source={require('./assets/icons/filterSlider2.png')}
                     style={styles.filterIconImg}
                   />
                 </TouchableOpacity>
@@ -283,6 +283,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingRight: 18,
     paddingLeft: 18,
+    // paddingTop: SCREENHEIGHT > 640 ? null : 13
     paddingTop: SCREENHEIGHT > 640 ? null : 13
   },
   cartCountView: {
@@ -316,8 +317,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   filterIconImg: {
-    height: SCREENHEIGHT > 640 ? 25.5 : 20,
-    width: SCREENHEIGHT > 640 ?  37 : 29
+    height: SCREENHEIGHT > 640 ? 29 : 20,
+    width: SCREENHEIGHT > 640 ?  29 : 20
   },
   backIconImg: {
     height: SCREENHEIGHT > 640 ? 30 : 25,
@@ -363,8 +364,8 @@ const styles = StyleSheet.create({
     paddingRight: (SCREENWIDTH * 0.13)
   },
   filterBackImg: {
-    height: 30,
-    width: 30,
+    height: SCREENHEIGHT > 640 ? 30 : 25,
+    width: SCREENHEIGHT > 640 ? 30 : 25
   },
   filterContainerTitleViewText: {
     color: '#fff',

@@ -60,3 +60,4 @@ buck-out/
 
 # VSCode
 .vscode
+android/app/release/*.apk
