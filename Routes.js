@@ -7,7 +7,8 @@ import {
   Dimensions,
   Button,
   Animated,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native';
 
 
@@ -16,6 +17,7 @@ const SCREENWIDTH = Dimensions.get('window').width;
 
 const Routes = () => {
   const [ cartVisible, setCartVisible ] = useState(false);
+  const [ filterVisible, setFilterVisible ] = useState(false);
   
   const filterIn  = useRef(new Animated.Value(0)).current;
   const transformFilterIn = {
@@ -25,7 +27,7 @@ const Routes = () => {
   };
   const animateFilterIn = () => {
     Animated.timing(filterIn, {
-      toValue: -SCREENWIDTH,
+      toValue: -(SCREENWIDTH),
       duration: 500,
       useNativeDriver: true
     }).start()
@@ -105,11 +107,13 @@ const Routes = () => {
   const showList = () => {
     animateFilterIn();
     animateListOut();
+    setFilterVisible(true);
   };
 
   const hideList = () => {
     animateFilterOut();
     animateListIn();
+    setFilterVisible(false);
   };
 
   const showCart = () => {
@@ -134,11 +138,13 @@ const Routes = () => {
   }
 
 
+
+
   return (
     <View style={styles.mainContainer}>
       <StatusBar 
         translucent={true}
-        barStyle="dark-content"
+        barStyle={ filterVisible ? "light-content"  : "dark-content"}
         backgroundColor="#ffffff00"
       />
 
@@ -156,7 +162,27 @@ const Routes = () => {
               transformCardUp
             ]}
           >
-            
+            <View style={styles.cardContainerTitleContainer}>
+              <View style={styles.cardContainerTitleContainerLeft}>
+                <Image 
+                  source={require('./assets/icons/chevronLeft.png')}
+                  style={styles.backIconImg}
+                />
+              </View>
+              <View style={styles.cardContainerTitleContainerCenter}>
+
+              </View>
+              <View style={styles.cardContainerTitleContainerRight}>
+                <TouchableOpacity
+                  onPress={() => showList()}
+                >
+                  <Image 
+                    source={require('./assets/icons/filterSlider1.png')}
+                    style={styles.filterIconImg}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
           </Animated.View>
           {/* cardsContainer ends */}
 
@@ -209,7 +235,7 @@ const styles = StyleSheet.create({
   pagesContainer: {
     height: SCREENHEIGHT + StatusBar.currentHeight,
     width: SCREENWIDTH,
-    backgroundColor: '#fff7dc',
+    backgroundColor: '#fff9e4',
     flexDirection: 'row'
   },
   listContainer: {
@@ -231,11 +257,9 @@ const styles = StyleSheet.create({
   cardsContainer: {
     width: SCREENWIDTH,
     height: (SCREENHEIGHT * 0.93),
-    backgroundColor: '#fff7dc',
+    backgroundColor: '#fff9e4',
     borderBottomRightRadius: 38,
     borderBottomLeftRadius: 38,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   cartContainer: {
     width: SCREENWIDTH,
@@ -256,6 +280,41 @@ const styles = StyleSheet.create({
     width: SCREENHEIGHT * 0.08,
     backgroundColor: '#fdbc3f',
     borderRadius: SCREENHEIGHT
+  },
+  cardContainerTitleContainer: {
+    width: SCREENWIDTH,
+    height: 60 + StatusBar.currentHeight,
+    // backgroundColor: 'red',
+    paddingTop: StatusBar.currentHeight,
+    // borderBottomWidth: 2,
+    flexDirection: 'row'
+  },
+  cardContainerTitleContainerLeft: {
+    width: '12%',
+    height: 60,
+    // backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+  cardContainerTitleContainerCenter: {
+    height: 60,
+    width: '73%',
+    // backgroundColor: 'blue'
+  },
+  cardContainerTitleContainerRight: {
+    width: '15%',
+    height: 60,
+    // backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+  },
+  filterIconImg: {
+    height: 35,
+    width: 35
+  },
+  backIconImg: {
+    height: 32,
+    width: 32
   }
   
 
