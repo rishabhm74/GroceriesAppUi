@@ -15,6 +15,7 @@ const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
 
 const Routes = () => {
+  const [ cartVisible, setCartVisible ] = useState(false);
   
   const filterIn  = useRef(new Animated.Value(0)).current;
   const transformFilterIn = {
@@ -121,6 +122,17 @@ const Routes = () => {
     animateCartListDown();
   }
 
+  const cartControl = () => {
+    if ( cartVisible == false ) {
+      showCart();
+      setCartVisible(true)
+    }
+    if ( cartVisible == true ) {
+      hideCart();
+      setCartVisible(false)
+    }
+  }
+
 
   return (
     <View style={styles.mainContainer}>
@@ -144,14 +156,7 @@ const Routes = () => {
               transformCardUp
             ]}
           >
-            <Button 
-              title="click"
-              onPress={() => showList()}
-            />
-            <Button 
-              title="up"
-              onPress={() => showCart()}
-            />
+            
           </Animated.View>
           {/* cardsContainer ends */}
 
@@ -163,7 +168,7 @@ const Routes = () => {
           > 
             <View style={styles.cartContainerTitleView}>
               <TouchableOpacity
-                onPress={() => hideCart()}
+                onPress={() => cartControl()}
               >
                 <View style={styles.cartCountView} />
               </TouchableOpacity>
