@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -8,7 +8,8 @@ import {
   Button,
   Animated,
   TouchableOpacity,
-  Image
+  Image,
+  ScrollView
 } from 'react-native';
 
 
@@ -140,12 +141,14 @@ const Routes = () => {
 
 
 
+
   return (
     <View style={styles.mainContainer}>
       <StatusBar 
         translucent={true}
+        // barStyle="light-content" // to be removed
         barStyle={ filterVisible ? "light-content"  : "dark-content"}
-        backgroundColor="#ffffff00"
+        backgroundColor="transparent"
       />
 
       <View style={styles.pagesContainer}>
@@ -170,7 +173,9 @@ const Routes = () => {
                 />
               </View>
               <View style={styles.cardContainerTitleContainerCenter}>
-
+                <Text style={styles.cardContainerTitleContainerText}>
+                  Pasta & Noodles
+                </Text>
               </View>
               <View style={styles.cardContainerTitleContainerRight}>
                 <TouchableOpacity
@@ -211,10 +216,23 @@ const Routes = () => {
             transformFilterIn
           ]}
         >
-          <Button 
-            title="click"
-            onPress={() => hideList()}
-          />
+          <View style={styles.filterContainerTitleView}> 
+            <View style={styles.backFilterScreenView}>
+              <TouchableOpacity
+                onPress={() => hideList()}
+              >
+                <Image 
+                  style={styles.filterBackImg}
+                  source={require('./assets/icons/chevronLeftWhite.png')}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.filterContainerTitleTextView}>
+              <Text style={styles.filterContainerTitleViewText}>
+                Filters
+              </Text>
+            </View>
+          </View>
         </Animated.View>
         {/* filterContainer ends */}
 
@@ -245,21 +263,12 @@ const styles = StyleSheet.create({
     position: 'relative',
     flexDirection: 'column',
   },
-  filterContainer: {
-    backgroundColor: '#000',
-    width: SCREENWIDTH,
-    height: SCREENHEIGHT + StatusBar.currentHeight,
-    position: 'relative',
-    paddingTop: StatusBar.currentHeight,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   cardsContainer: {
     width: SCREENWIDTH,
-    height: (SCREENHEIGHT * 0.93),
-    backgroundColor: '#fff9e4',
-    borderBottomRightRadius: 38,
-    borderBottomLeftRadius: 38,
+    height: SCREENHEIGHT > 640 ? (SCREENHEIGHT * 0.93) : (SCREENHEIGHT * 0.87),
+    backgroundColor: '#fdf9eb',
+    borderBottomRightRadius: SCREENHEIGHT > 640 ? 38 : 28,
+    borderBottomLeftRadius: SCREENHEIGHT > 640 ? 38 : 28
   },
   cartContainer: {
     width: SCREENWIDTH,
@@ -273,7 +282,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
     paddingRight: 18,
-    paddingLeft: 18
+    paddingLeft: 18,
+    paddingTop: SCREENHEIGHT > 640 ? null : 13
   },
   cartCountView: {
     height: SCREENHEIGHT * 0.08,
@@ -284,37 +294,83 @@ const styles = StyleSheet.create({
   cardContainerTitleContainer: {
     width: SCREENWIDTH,
     height: 60 + StatusBar.currentHeight,
-    // backgroundColor: 'red',
     paddingTop: StatusBar.currentHeight,
-    // borderBottomWidth: 2,
     flexDirection: 'row'
   },
   cardContainerTitleContainerLeft: {
     width: '12%',
     height: 60,
-    // backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
   cardContainerTitleContainerCenter: {
     height: 60,
-    width: '73%',
-    // backgroundColor: 'blue'
+    width: '74%',
+    justifyContent: 'center',
+    paddingLeft: '7%'
   },
   cardContainerTitleContainerRight: {
-    width: '15%',
+    width: '14%',
     height: 60,
-    // backgroundColor: 'green',
     justifyContent: 'center',
     alignItems: 'flex-start'
   },
   filterIconImg: {
-    height: 35,
-    width: 35
+    height: SCREENHEIGHT > 640 ? 25.5 : 20,
+    width: SCREENHEIGHT > 640 ?  37 : 29
   },
   backIconImg: {
-    height: 32,
-    width: 32
+    height: SCREENHEIGHT > 640 ? 30 : 25,
+    width: SCREENHEIGHT > 640 ? 30 : 25
+  },
+  cardContainerTitleContainerText: {
+    color: '#292929',
+    fontSize: 19,
+    fontFamily: 'Product Sans Bold 700'
+  },
+  filterContainer: {
+    backgroundColor: '#000',
+    width: SCREENWIDTH,
+    height: SCREENHEIGHT + StatusBar.currentHeight,
+    position: 'relative',
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+
+    // to be removed
+    // marginLeft: -SCREENWIDTH
+  },
+  filterContainerTitleView: {
+    width: SCREENWIDTH,
+    height: 60 + StatusBar.currentHeight,
+    paddingTop: StatusBar.currentHeight,
+    // backgroundColor: 'red',
+    flexDirection: 'row'
+  },
+  backFilterScreenView: {
+    height: 60,
+    width: '13%',
+    // backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+  filterContainerTitleTextView: {
+    height: 60,
+    // backgroundColor: 'blue',
+    width: '87%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingRight: (SCREENWIDTH * 0.13)
+  },
+  filterBackImg: {
+    height: 30,
+    width: 30,
+  },
+  filterContainerTitleViewText: {
+    color: '#fff',
+    fontFamily: 'Product Sans Medium 500',
+    fontSize: 19,
+    letterSpacing: 0.25
   }
   
 
